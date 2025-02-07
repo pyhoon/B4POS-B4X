@@ -35,6 +35,12 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	#End If
 End Sub
 
+'Private Sub B4XPage_CloseRequest As ResumableSub
+'	
+'End Sub
+
+#If B4J
 Private Sub B4XPage_Disappear
 	B4XPages.ShowPage("MainPage")
 End Sub
+#End If

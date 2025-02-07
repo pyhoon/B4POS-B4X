@@ -58,7 +58,7 @@ Sub Class_Globals
 	Private PnlName4 As Pane	
 	#Else
 	Public sp1 As ScrollView
-	Public pnbuttons As B4XView
+	Public pnbuttons As Panel
 	Private Pnl1 As Panel
 	Private Pnl2 As Panel
 	Private Pnl3 As Panel
@@ -123,6 +123,10 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	CallSubDelayed3(Me, "SetScrollPaneBackgroundColor", ClvRight, xui.Color_Transparent)
 	CallSubDelayed3(Me, "SetScrollPaneBackgroundColor", ClvSales, xui.Color_Transparent)
 	CallSubDelayed3(Me, "SetScrollPaneBackgroundColor", ClvItems, xui.Color_Transparent)
+	#Else
+	Dim sp1 As ScrollView
+	sp1.Initialize(60dip)
+	pnbuttons.Initialize("pnbuttons")
 	#End If
 	Items.Initialize
 	
@@ -311,6 +315,9 @@ Public Sub LoadButtons
 	'sp1.TooltipText = ""
 	tooltipstyle = File.ReadString(File.DirAssets, "tooltipstyle.css")
 	set_tooltip_style(sp1)
+	#Else
+	pnbuttons.Width = 152 * Categories.Size
+	PnlMain.AddView(sp1, 5dip, 50dip, Pane1.Width, 60dip)	' Pane1 in the design reserves the place for the sp1
 	#End If
 	
 	Dim Width As Double = ClvLeft.AsView.Width
@@ -496,7 +503,7 @@ End Sub
 Private Sub CreateCardItem (Item1 As CardItem, Item2 As CardItem, Item3 As CardItem, Item4 As CardItem) As B4XView
 	Dim p As B4XView = xui.CreatePanel("")
 	Dim Height As Int = 210dip
-	Dim Width As Int = ClvSales.AsView.Width
+	Dim Width As Int = ClvItems.AsView.Width
 	'If GetDeviceLayoutValues.ApproximateScreenSize < 4.5 Then Height = 350dip
 	p.SetLayoutAnimated(0, 0, 0, Width, Height)
 	#If B4J
@@ -599,16 +606,27 @@ End Sub
 '	Dim Env As Map = jo.RunMethod("getenv", Null)
 '	Return Env
 'End Sub
+#End If
 
 Private Sub ClvItems_ItemClick (Index As Int, Value As Object)
 	'Log(Index & " : " & Value)
 End Sub
 
+#If B4J
 Private Sub lbl01_MouseClicked (EventData As MouseEvent)
 	B4XPages.ShowPageAndRemovePreviousPages("LoginPage")
+#Else
+Private Sub lbl01_Click
+	'B4XPages.ClosePage(Me)
+	B4XPages.ShowPage("LoginPage")
+#End If
 End Sub
 
+#If B4J
 Private Sub Pnl1_MouseClicked (EventData As MouseEvent)
+#Else
+Private Sub Pnl1_Click
+#End If
 	Dim pnl As B4XView = Sender
 	Dim lbl As B4XView = pnl.GetView(1)
 	Dim pan As B4XView = pnl.GetView(2)
@@ -622,7 +640,11 @@ Private Sub Pnl1_MouseClicked (EventData As MouseEvent)
 	CalculateTotalAmount
 End Sub
 
+#If B4J
 Private Sub Pnl2_MouseClicked (EventData As MouseEvent)
+#Else
+Private Sub Pnl2_Click
+#End If
 	Dim pnl As B4XView = Sender
 	Dim lbl As B4XView = pnl.GetView(1)
 	Dim pan As B4XView = pnl.GetView(2)
@@ -636,7 +658,11 @@ Private Sub Pnl2_MouseClicked (EventData As MouseEvent)
 	CalculateTotalAmount
 End Sub
 
+#If B4J
 Private Sub Pnl3_MouseClicked (EventData As MouseEvent)
+#Else
+Private Sub Pnl3_Click
+#End If
 	Dim pnl As B4XView = Sender
 	Dim lbl As B4XView = pnl.GetView(1)
 	Dim pan As B4XView = pnl.GetView(2)
@@ -651,7 +677,11 @@ Private Sub Pnl3_MouseClicked (EventData As MouseEvent)
 	CalculateTotalAmount
 End Sub
 
+#If B4J
 Private Sub Pnl4_MouseClicked (EventData As MouseEvent)
+#Else
+Private Sub Pnl4_Click
+#End If
 	Dim pnl As B4XView = Sender
 	Dim lbl As B4XView = pnl.GetView(1)
 	Dim pan As B4XView = pnl.GetView(2)
@@ -666,26 +696,39 @@ Private Sub Pnl4_MouseClicked (EventData As MouseEvent)
 	CalculateTotalAmount
 End Sub
 
+#If B4J
 Private Sub set_tooltip_style (vw As B4XView)
 	If vw.As(ScrollPane).TooltipText = "" Then Return
 	Dim jo As JavaObject = vw
 	Dim tooltip As JavaObject = jo.RunMethodJO("getTooltip", Null)
 	tooltip.RunMethod("setStyle", Array As Object(tooltipstyle))
 End Sub
+#End If
 
+#If B4J
 Private Sub PnlCategory_MouseClicked (EventData As MouseEvent)
 	If sp1dragged = True Then Return
 	'Dim pnl As B4XView = Sender
 	'Log(pnl)
 	'Log(GetType(pnl.GetView(0)))
 	EventData.Consume
+#Else
+Private Sub PnlCategory_Click
+
+#End If
 End Sub
 
+#If B4J
 Private Sub PnlCategory_MouseMoved (EventData As MouseEvent)
 	sp1dragged = False
 	EventData.Consume
+#Else
+Private Sub PnlCategory_Touch (Action As Int, X As Float, Y As Float)
+
+#End If
 End Sub
 
+#If B4J
 Private Sub PnlCategory_MouseDragged (EventData As MouseEvent)
 	sp1dragged = True
 End Sub
