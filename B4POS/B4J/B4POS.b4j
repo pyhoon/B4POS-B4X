@@ -1,0 +1,156 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.b4pos
+File1=B001.png
+File10=C001.png
+File11=CardItem.bjl
+File12=LeftPanel.bjl
+File13=LineItem.bjl
+File14=LoginPanel.bjl
+File15=logo.png
+File16=MainPage.bjl
+File17=RightPanel.bjl
+File18=tooltipstyle.css
+File2=B002.png
+File3=B003.png
+File4=B004.png
+File5=B005.png
+File6=B006.png
+File7=B007.png
+File8=BtnCategory.bjl
+File9=Button100.bjl
+FileGroup1=Assets\images
+FileGroup10=Assets\images
+FileGroup11=Layouts\Parts
+FileGroup12=Layouts\Panels
+FileGroup13=Layouts\Parts
+FileGroup14=Layouts\Panels
+FileGroup15=Assets\images
+FileGroup16=Layouts\Pages
+FileGroup17=Layouts\Panels
+FileGroup18=Assets\styles
+FileGroup2=Assets\images
+FileGroup3=Assets\images
+FileGroup4=Assets\images
+FileGroup5=Assets\images
+FileGroup6=Assets\images
+FileGroup7=Assets\images
+FileGroup8=Layouts\Parts
+FileGroup9=Layouts\Parts
+Group=Default Group
+Library1=b4xpages
+Library2=jcore
+Library3=jfx
+Library4=jreflection
+Library5=miniormutils
+Library6=xui views
+Module1=|relative|..\B4XMainPage
+Module2=|relative|..\LoginPage
+Module3=|relative|..\Utils
+NumberOfFiles=18
+NumberOfLibraries=6
+NumberOfModules=3
+Version=10
+@EndOfDesignText@
+' Product: B4POS (Point of Sales)
+' Version: 2025.02.001
+
+#Region Project Attributes 
+	#MainFormWidth: 1278
+	#MainFormHeight: 640
+#End Region
+#Region Package Property
+	#PackagerProperty: ExeName = B4POS
+#End Region
+#Region Additional Jars
+	#AdditionalJar: sqlite-jdbc-3.7.2
+#End Region
+Sub Process_Globals
+	Private FX 			As JFX
+	'Public DB			As SQL
+	Private MainForm 	As Form
+	#Region Global Variables
+	'Public DB			As MiniORM
+	Public DataFolder 	As String
+	Public DataFile 	As String = "data.sqlite"
+	'Public FontRegular	As B4XFont
+	'Public FontBold	As B4XFont
+	Type CardItem (Image As Object, Name As String, Price As String, PriceTextColor As Int, Index As Int)
+	Type SalesItem (ID As Int, _
+	Code As String, _
+	BarCode As String, _
+	Name As String, _
+	Name2 As String, _
+	Brand As String, _
+	Model As String, _
+	Unit As Int, _
+	Price As Double, _
+	Amount As Double, _
+	Discount As Double, _
+	SubAmount As Double, _
+	NetAmount As Double, _
+	Tax As Double, _
+	TaxCode As String, _
+	TaxIncluded As Int, _
+	Promo As List, _
+	IsStock As Int, _
+	IsTrack As Int)
+	#End Region
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	MainForm = Form1
+	MainForm.Show
+	MainForm.Icon = FX.LoadImage(File.DirAssets, "logo.png")
+	MainForm.WindowLeft = -7
+	MainForm.WindowTop = 0
+	Dim PagesManager As B4XPagesManager
+	PagesManager.Initialize(MainForm)
+	AddKeyPressedListener(MainForm)
+End Sub
+
+'Template version: B4J-1.0
+#Region Delegates
+Sub MainForm_FocusChanged (HasFocus As Boolean)
+	B4XPages.Delegate.MainForm_FocusChanged(HasFocus)
+End Sub
+
+Sub MainForm_Resize (Width As Double, Height As Double)
+	B4XPages.Delegate.MainForm_Resize(Width, Height)
+End Sub
+
+Sub MainForm_Closed
+	B4XPages.Delegate.MainForm_Closed
+End Sub
+
+Sub MainForm_CloseRequest (EventData As Event)
+	B4XPages.Delegate.MainForm_CloseRequest(EventData)
+End Sub
+
+Public Sub MainForm_IconifiedChanged (Iconified As Boolean)
+	B4XPages.Delegate.MainForm_IconifiedChanged(Iconified)
+End Sub
+
+Sub AddKeyPressedListener (frm As Form)
+	Dim r As Reflector
+	r.Target = frm.RootPane
+	r.AddEventHandler("Main_KeyPressed", "javafx.scene.input.KeyEvent.KEY_PRESSED")
+	r.AddEventHandler("Main_KeyPressed", "javafx.scene.input.KeyEvent.KEY_RELEASED")
+End Sub
+
+Private Sub Main_KeyPressed_Event (e As Event)
+	Dim keyevent As Reflector
+	keyevent.Target = e
+	Dim KeyCode As String = keyevent.RunMethod("getCode")
+	Dim EventType As String = keyevent.RunMethod("getEventType")
+	Select EventType
+		Case "KEY_PRESSED"
+			Select KeyCode
+				Case "ESCAPE"
+					B4XPages.MainPage.BtnTotal.RequestFocus
+				Case "C"
+					B4XPages.MainPage.pnbuttons.RequestFocus
+			End Select
+	End Select
+	e.Consume
+End Sub
+#End Region

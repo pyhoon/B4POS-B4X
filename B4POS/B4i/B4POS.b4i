@@ -1,0 +1,106 @@
+﻿Build1=Default,b4i.b4pos
+File1=B001.png
+File10=C001.png
+File11=CardItem.bil
+File12=LeftPanel.bil
+File13=LineItem.bil
+File14=LoginPanel.bil
+File15=MainPage.bil
+File16=RightPanel.bil
+File2=B002.png
+File3=B003.png
+File4=B004.png
+File5=B005.png
+File6=B006.png
+File7=B007.png
+File8=BtnCategory.bil
+File9=Button100.bil
+FileGroup1=Assets\images
+FileGroup10=Assets\images
+FileGroup11=Layouts\Parts
+FileGroup12=Layouts\Panels
+FileGroup13=Layouts\Parts
+FileGroup14=Layouts\Panels
+FileGroup15=Layouts\Pages
+FileGroup16=Layouts\Panels
+FileGroup2=Assets\images
+FileGroup3=Assets\images
+FileGroup4=Assets\images
+FileGroup5=Assets\images
+FileGroup6=Assets\images
+FileGroup7=Assets\images
+FileGroup8=Layouts\Parts
+FileGroup9=Layouts\Parts
+Group=Default Group
+Library1=b4xpages
+Library2=icore
+Library3=miniormutils
+Library4=xui views
+Module1=|relative|..\B4XMainPage
+Module2=|relative|..\LoginPage
+Module3=|relative|..\Utils
+NumberOfFiles=16
+NumberOfLibraries=4
+NumberOfModules=3
+Version=8.51
+@EndOfDesignText@
+'Code module
+#Region  Project Attributes 
+	#ApplicationLabel: B4POS
+	#Version: 2025.02.001
+	'Orientation possible values: Portrait, LandscapeLeft, LandscapeRight and PortraitUpsideDown
+	#iPhoneOrientations: Portrait, LandscapeLeft, LandscapeRight
+	#iPadOrientations: Portrait, LandscapeLeft, LandscapeRight, PortraitUpsideDown
+	#Target: iPhone, iPad
+	#ATSEnabled: True
+	#MinVersion: 11
+#End Region
+
+Sub Process_Globals
+	Public App As Application
+	Public NavControl As NavigationController
+	#Region Global Variables
+	'Public DB			As MiniORM
+	Public DataFolder 	As String
+	Public DataFile 	As String = "data.sqlite"
+	Public FontRegular	As B4XFont
+	Public FontBold		As B4XFont
+	Type CardItem (Image As Object, Name As String, Price As String, PriceTextColor As Int, Index As Int)
+	Type SalesItem (ID As Int, _
+	Code As String, _
+	BarCode As String, _
+	Name As String, _
+	Name2 As String, _
+	Brand As String, _
+	Model As String, _
+	Unit As Int, _
+	Price As Double, _
+	Amount As Double, _
+	Discount As Double, _
+	SubAmount As Double, _
+	NetAmount As Double, _
+	Tax As Double, _
+	TaxCode As String, _
+	TaxIncluded As Int, _
+	Promo As List, _
+	IsStock As Int, _
+	IsTrack As Int)
+	#End Region
+End Sub
+
+Private Sub Application_Start (Nav As NavigationController)
+	NavControl = Nav
+	Dim PagesManager As B4XPagesManager
+	PagesManager.Initialize(NavControl)
+End Sub
+
+'Template version: B4i-1.0
+#Region Delegates
+Private Sub Application_Background
+	B4XPages.Delegate.Activity_Pause
+End Sub
+
+Private Sub Application_Foreground
+	B4XPages.Delegate.Activity_Resume
+End Sub
+#End Region
