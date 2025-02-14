@@ -27,7 +27,8 @@ End Sub
 'This event will be called once, before the page becomes visible.
 Private Sub B4XPage_Created (Root1 As B4XView)
 	Root = Root1
-	Root.LoadLayout("LoginPanel")
+	Root.LoadLayout("LoginPage")
+	B4XPages.SetTitle(Me, "Login")
 	#If B4J
 	CSSUtils.SetStyleProperty(txtStaffID, "-fx-focus-color", "transparent") '"ARGB(0, 128, 128, 128)")
 	CSSUtils.SetStyleProperty(txtPinCode, "-fx-focus-color", "transparent") '"ARGB(0, 128, 128, 128)")

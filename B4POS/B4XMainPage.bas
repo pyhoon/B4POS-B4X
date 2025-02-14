@@ -23,12 +23,15 @@ Sub Class_Globals
 	Private PnlRight As B4XView
 	Private Pane1 As B4XView
 	Private PnlMain As B4XView
-	Private LblCategory As B4XView
+	Private Lbl01 As Label
+	Private Lbl02 As Label
 	Private LblInfo As B4XView
+	Public BtnTotal As Button
 	Private Button100 As B4XView
+	Private LblCategory As B4XView
 	Private TxtLeft As B4XView
-	Private TxtCenter As B4XView
 	Private TxtRight As B4XView	
+	Private TxtCenter As B4XView
 	Private LblName1 As B4XView
 	Private LblName2 As B4XView
 	Private LblName3 As B4XView
@@ -68,8 +71,8 @@ Sub Class_Globals
 	Private PnlName3 As Panel
 	Private PnlName4 As Panel
 	#End If
-	Public BtnTotal As Button
 	Private Items As List
+	Private Categories As List
 	Private SalesItems As List
 	Private TenderItems As List
 	'Private TempNum As String
@@ -80,6 +83,7 @@ Sub Class_Globals
 	#End If
 	Private dblTotalAmount As Double
 	Private LoginPage1 As LoginPage
+	Private PrinterPage1 As PrinterPage
 	Private TempSalesItem As SalesItem
 	'Private Const LEFT As String = "LEFT"
 	'Private Const RIGHT As String = "RIGHT"
@@ -88,7 +92,6 @@ Sub Class_Globals
 	Private Const COLOR_RED As Int = -65536			'ignore
 	Private Const COLOR_BLUE As Int = -16776961		'ignore
 	Private Const COLOR_MAGENTA As Int = -65281		'ignore
-	Private Categories As List
 	Type Category (Id As Int, Name As String)
 End Sub
 
@@ -110,6 +113,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	PnlRight.LoadLayout("RightPanel")
 	B4XPages.SetTitle(Me, Title)
 	B4XPages.AddPage("LoginPage", LoginPage1.Initialize)
+	B4XPages.AddPage("PrinterPage", PrinterPage1.Initialize)
 	LblInfo.Text = Utils.ConvertDateTime3(DateTime.Now)
 	
 	#If B4J
@@ -134,6 +138,8 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	InitFonts
 	DBInit
 	#If B4J
+	Lbl01.MouseCursor = fx.Cursors.HAND
+	Lbl02.MouseCursor = fx.Cursors.HAND
 	BtnTotal.MouseCursor = fx.Cursors.HAND
 	#End If
 End Sub
@@ -619,6 +625,16 @@ Private Sub lbl01_MouseClicked (EventData As MouseEvent)
 Private Sub lbl01_Click
 	'B4XPages.ClosePage(Me)
 	B4XPages.ShowPage("LoginPage")
+#End If
+End Sub
+
+#If B4J
+Private Sub Lbl02_MouseClicked (EventData As MouseEvent)
+	B4XPages.ShowPageAndRemovePreviousPages("PrinterPage")
+#Else
+Private Sub lbl02_Click
+	'B4XPages.ClosePage(Me)
+	B4XPages.ShowPage("PrinterPage")
 #End If
 End Sub
 
