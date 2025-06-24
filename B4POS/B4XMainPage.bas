@@ -15,7 +15,7 @@ Sub Class_Globals
 	Private fx As JFX
 	#End If
 	Public DB As MiniORM
-	Public CON As DatabaseConnector
+	Public CON As ORMConnector
 	Private xui As XUI
 	Private Timer1 As Timer
 	Private Root As B4XView
@@ -129,7 +129,11 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	CallSubDelayed3(Me, "SetScrollPaneBackgroundColor", ClvItems, xui.Color_Transparent)
 	#Else
 	Dim sp1 As ScrollView
+	#If B4i
+	sp1.Initialize("sp1", 60dip, 60)
+	#Else
 	sp1.Initialize(60dip)
+	#End If
 	pnbuttons.Initialize("pnbuttons")
 	#End If
 	Items.Initialize
@@ -181,7 +185,7 @@ Sub CreateB4XFont (FontFileName As String, FontSize As Float, NativeFontSize As 
 End Sub
 
 Public Sub DBInit
-	Dim CNN As Conn
+	Dim CNN As ConnectionInfo
 	CNN.Initialize
 	CNN.DBType = "SQLite"
 	CNN.DBFile = "data.sqlite"
@@ -198,15 +202,15 @@ Public Sub DBInit
 		CON.Initialize(CNN)
 		Dim DBFound As Boolean = CON.DBExist
 		If DBFound Then
-			LogColor($"${CON.DBEngine} database found!"$, COLOR_BLUE)
-			DB.Initialize(DBOpen, DBEngine)
+			LogColor($"${DBType} database found!"$, COLOR_BLUE)
+			DB.Initialize(DBType, DBOpen)
 			'DB.ShowExtraLogs = True
 			LoadCategories
 			LoadButtons
 			LoadLineItems
 			LoadCardItems
 		Else
-			LogColor($"${CON.DBEngine} database not found!"$, COLOR_RED)
+			LogColor($"${DBType} database not found!"$, COLOR_RED)
 			CreateDatabase
 		End If
 	Catch
@@ -219,8 +223,8 @@ Public Sub DBInit
 	End Try
 End Sub
 
-Private Sub DBEngine As String
-	Return CON.DBEngine
+Private Sub DBType As String
+	Return CON.DBType
 End Sub
 
 Private Sub DBOpen As SQL
@@ -240,16 +244,17 @@ Private Sub CreateDatabase
 	End If
 	
 	DBClose
-	DB.Initialize(DBOpen, DBEngine)
+	DB.Initialize(DBType, DBOpen)
 	'DB.ShowExtraLogs = True
 	DB.UseTimestamps = True
 	'DB.ExecuteAfterCreate = True
 	'DB.ExecuteAfterInsert = True
-	DB.AddAfterCreate = True
-	DB.AddAfterInsert = True
+	'DB.AddAfterCreate = True
+	'DB.AddAfterInsert = True
+	DB.QueryAddToBatch = True
 	
 	DB.Table = "categories"
-	DB.Columns.Add(DB.CreateORMColumn2(CreateMap("Name": "name")))
+	DB.Columns.Add(DB.CreateColumn2(CreateMap("Name": "name")))
 	DB.Create
 	DB.Columns = Array("name")
 	DB.Insert2(Array As String("Drinks"))
@@ -261,10 +266,10 @@ Private Sub CreateDatabase
 	DB.Insert2(Array As String("Snack & Etc"))
 
 	DB.Table = "products"
-	DB.Columns.Add(DB.CreateORMColumn2(CreateMap("Name": "cat_id", "Type": DB.INTEGER)))
-	DB.Columns.Add(DB.CreateORMColumn2(CreateMap("Name": "code", "Type": DB.VARCHAR, "Size": 12)))
-	DB.Columns.Add(DB.CreateORMColumn2(CreateMap("Name": "name")))
-	DB.Columns.Add(DB.CreateORMColumn2(CreateMap("Name": "price", "Type": DB.DECIMAL, "Size": "10,2", "Default": 0.0)))
+	DB.Columns.Add(DB.CreateColumn2(CreateMap("Name": "cat_id", "Type": DB.INTEGER)))
+	DB.Columns.Add(DB.CreateColumn2(CreateMap("Name": "code", "Type": DB.VARCHAR, "Size": 12)))
+	DB.Columns.Add(DB.CreateColumn2(CreateMap("Name": "name")))
+	DB.Columns.Add(DB.CreateColumn2(CreateMap("Name": "price", "Type": DB.DECIMAL, "Size": "10,2", "Default": 0.0)))
 	DB.Foreign("cat_id", "id", "categories", "", "")
 	DB.Create
 	
@@ -281,7 +286,7 @@ Private Sub CreateDatabase
 		Return
 	End If
 	DB.Close
-	DB.Initialize(DBOpen, DBEngine)
+	DB.Initialize(DBType, DBOpen)
 	LoadCategories
 	LoadButtons
 	LoadLineItems
@@ -524,11 +529,13 @@ Private Sub CreateCardItem (Item1 As CardItem, Item2 As CardItem, Item3 As CardI
 	#End If
 
 	If Item1.IsInitialized Then
-		If Item1.Image <> Null Then Img1.Bitmap = xui.LoadBitmapResize(File.DirAssets, Item1.Image, 400dip, 300dip, True)
+		'If Item1.Image <> Null Then Img1.Bitmap = xui.LoadBitmapResize(File.DirAssets, Item1.Image, 400dip, 300dip, True)
+		If Item1.Image <> Null Then Img1.Bitmap = xui.LoadBitmapResize(File.DirAssets, Item1.Image, 200dip, 200dip, False)
 		If Item1.Name <> Null Then LblName1.Text = Item1.Name
 		If Item1.Price <> Null Then LblPrice1.Text= Item1.Price
 		LblPrice1.TextColor = Item1.PriceTextColor
-		LblPrice1.SetTextAlignment("CENTER", "LEFT")
+		'LblPrice1.SetTextAlignment("CENTER", "LEFT")
+		LblPrice1.SetTextAlignment("CENTER", "RIGHT")
 		'Utils.SetRectangleClip(Pnl1, 9)
 		#If B4J
 		Pnl1.MouseCursor = fx.Cursors.HAND
@@ -538,11 +545,13 @@ Private Sub CreateCardItem (Item1 As CardItem, Item2 As CardItem, Item3 As CardI
 	End If
 
 	If Item2.IsInitialized Then
-		If Item2.Image <> Null Then Img2.Bitmap = xui.LoadBitmapResize(File.DirAssets, Item2.Image, 400dip, 300dip, True)
+		'If Item2.Image <> Null Then Img2.Bitmap = xui.LoadBitmapResize(File.DirAssets, Item2.Image, 400dip, 300dip, True)
+		If Item2.Image <> Null Then Img2.Bitmap = xui.LoadBitmapResize(File.DirAssets, Item2.Image, 200dip, 200dip, False)
 		If Item2.Name <> Null Then LblName2.Text = Item2.Name
 		If Item2.Price <> Null Then LblPrice2.Text= Item2.Price
 		LblPrice2.TextColor = Item2.PriceTextColor
-		LblPrice2.SetTextAlignment("CENTER", "LEFT")
+		'LblPrice1.SetTextAlignment("CENTER", "LEFT")
+		LblPrice1.SetTextAlignment("CENTER", "RIGHT")
 		'Utils.SetRectangleClip(Pnl2, 12)
 		#If B4J
 		Pnl2.MouseCursor = fx.Cursors.HAND
@@ -556,7 +565,8 @@ Private Sub CreateCardItem (Item1 As CardItem, Item2 As CardItem, Item3 As CardI
 		If Item3.Name <> Null Then LblName3.Text = Item3.Name
 		If Item3.Price <> Null Then LblPrice3.Text= Item3.Price
 		LblPrice3.TextColor = Item3.PriceTextColor
-		LblPrice3.SetTextAlignment("CENTER", "LEFT")
+		'LblPrice1.SetTextAlignment("CENTER", "LEFT")
+		LblPrice1.SetTextAlignment("CENTER", "RIGHT")
 		#If B4J
 		Pnl3.MouseCursor = fx.Cursors.HAND
 		#End If
@@ -569,7 +579,8 @@ Private Sub CreateCardItem (Item1 As CardItem, Item2 As CardItem, Item3 As CardI
 		If Item4.Name <> Null Then LblName4.Text = Item4.Name Else LblName4.Visible = False
 		If Item4.Price <> Null Then LblPrice4.Text= Item4.Price Else LblPrice4.Visible = False
 		LblPrice4.TextColor = Item4.PriceTextColor
-		LblPrice4.SetTextAlignment("CENTER", "LEFT")
+		'LblPrice1.SetTextAlignment("CENTER", "LEFT")
+		LblPrice1.SetTextAlignment("CENTER", "RIGHT")
 		#If B4J
 		Pnl4.MouseCursor = fx.Cursors.HAND
 		#End If

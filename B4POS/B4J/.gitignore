@@ -1,6 +1,14 @@
 # ignore files
 *.meta
 *.zip
+Files/B001.png
+Files/B002.png
+Files/B003.png
+Files/B004.png
+Files/B005.png
+Files/B006.png
+Files/B007.png
+Files/C001.png
 
 # ignore ALL files in these directories
 AutoBackups/

@@ -5,7 +5,7 @@ File10=C001.png
 File11=CardItem.bjl
 File12=LeftPanel.bjl
 File13=LineItem.bjl
-File14=LoginPage.bjl
+File14=LoginPanel.bjl
 File15=logo.png
 File16=MainPage.bjl
 File17=PrinterPage.bjl
@@ -24,7 +24,7 @@ FileGroup10=Assets\images
 FileGroup11=Layouts\Parts
 FileGroup12=Layouts\Panels
 FileGroup13=Layouts\Parts
-FileGroup14=Layouts\Pages
+FileGroup14=Layouts\Panels
 FileGroup15=Assets\images
 FileGroup16=Layouts\Pages
 FileGroup17=Layouts\Pages
@@ -52,7 +52,7 @@ Module4=|relative|..\Utils
 NumberOfFiles=19
 NumberOfLibraries=6
 NumberOfModules=4
-Version=10
+Version=10.2
 @EndOfDesignText@
 ' Product: B4POS (Point of Sales)
 ' Version: 2025.02.001
